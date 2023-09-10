@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../constants/colors';
 
@@ -7,11 +7,22 @@ import colors from '../constants/colors';
 const Contact = props => {
 
     const deleteHandler = () => {
-        props.onDelete(props.id);
+      Alert.alert("Warning!", "Do you really want to delete " + props.name, [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => props.onDelete(props.id), style: "destructive" },
+      ]);
+    };
+
+    const contactClickHandler = () => {
+        props.contactClickHandler(props.id, props.name);
     }
 
     return (
-      <TouchableOpacity activeOpacity={0.6}>
+      <TouchableOpacity activeOpacity={0.6} onPress={contactClickHandler}>
         <View style={styles.container}>
           <Icon
             name="user"

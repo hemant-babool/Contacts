@@ -3,7 +3,7 @@ import { Modal, StyleSheet, TextInput, View, Button } from 'react-native';
 
 const ContactDetail = props => {
 
-    const [enteredName, setEnteredName] = useState('');
+    const [enteredName, setEnteredName] = useState(props.name);
     const inputRef = useRef(null);
 
     useEffect(() => {
@@ -12,11 +12,19 @@ const ContactDetail = props => {
       }
     });
 
-    const addBtnHandler = () => {
+    useEffect(() => {
+      setEnteredName(props.name);
+    }, [props.name]);
+
+    const actionButtonHandler = () => {
         if(enteredName.length === 0) {
             return;
         }
-        props.addContactHandler(enteredName);
+        if(props.isAdd) {
+            props.addContactHandler(props.id, enteredName);
+        } else {
+            props.updateNameHandler(props.id, enteredName);
+        }
         setEnteredName('');
     }
 
@@ -44,7 +52,7 @@ const ContactDetail = props => {
               <Button title="CANCEL" color="red" onPress={cancelBtnHandler} />
             </View>
             <View style={styles.button}>
-              <Button title="ADD" onPress={addBtnHandler} />
+              <Button title={props.isAdd? "ADD" : "UPDATE"} onPress={actionButtonHandler} />
             </View>
           </View>
         </View>
