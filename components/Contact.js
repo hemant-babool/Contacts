@@ -6,14 +6,29 @@ import colors from '../constants/colors';
 
 const Contact = props => {
 
+    const deleteHandler = () => {
+        props.onDelete(props.id);
+    }
+
     return (
-        <TouchableOpacity activeOpacity={0.8}>
-            <View style={styles.container}>
-                <Icon name="user" size={36} color={colors.iconColor} style={styles.userIcon}/>
-                <Text style={styles.name}> {props.name} </Text>
-                <Icon name="trash" size={36} color={colors.iconColor} style={styles.trashIcon}/>
-            </View>
-        </TouchableOpacity>
+      <TouchableOpacity activeOpacity={0.6}>
+        <View style={styles.container}>
+          <Icon
+            name="user"
+            size={36}
+            color={colors.iconColor}
+            style={styles.userIcon}
+          />
+          <Text style={styles.name}> {props.name} </Text>
+          <Icon.Button
+            name="trash"
+            size={24}
+            color={colors.iconColor}
+            style={styles.trashIcon}
+            onPress={deleteHandler}
+          />
+        </View>
+      </TouchableOpacity>
     );
 
 };
@@ -28,16 +43,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         margin: 10,
         shadowColor: "black",
-        shadowOffset: { width: 0, height: 2 },
+        shadowOffset: { width: 0, height: 5 },
         shadowRadius: 6,
-        shadowOpacity: 0.26,
+        shadowOpacity: 0.5,
         backgroundColor: colors.secondary
     },
     userIcon: {
         padding: 10
     },
     trashIcon: {
-      padding: 10  
+    //   padding: 10,
+      backgroundColor: colors.secondary
     },
     name: {
         fontSize: 18,

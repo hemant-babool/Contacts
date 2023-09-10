@@ -49,13 +49,22 @@ export default function App() {
     setFilteredContactList(filterArray);
   }
 
+  const deleteHandler = (contactId) => {
+    setContactList((contactList) => {
+      return contactList.filter((contact) => contact.id !== contactId);
+    });
+    setFilteredContactList((filteredContactList) => {
+      return filteredContactList.filter((contact) => contact.id !== contactId);
+    })
+  }
+
   let allContacts;
   if (!isContactDetailEnabled) {
     allContacts = (
       <FlatList
         data={filteredContactList}
         keyExtractor = {(item, index) => item.id}
-        renderItem={(contact) => <Contact id={contact.item.id} name={contact.item.name} />}
+        renderItem={(contact) => <Contact id={contact.item.id} name={contact.item.name} onDelete={deleteHandler}/>}
       />
     );
   }
