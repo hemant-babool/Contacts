@@ -11,9 +11,7 @@ const Contact = props => {
     }
 
     const contactClickHandler = () => {
-        const clickedContact = { id: props.id, name: props.name};
-        console.log('clicked detected, passing value to parent=', clickedContact)
-        props.contactClickHandler(clickedContact);
+        props.contactClickHandler(props.id, props.name);
     }
 
     return (

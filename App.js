@@ -23,10 +23,10 @@ export default function App() {
   const [contactList, setContactList] = useState(initialContacts);
   const [filteredContactList, setFilteredContactList] = useState(initialContacts);
   const [isAdd, setIsAdd] = useState(true);
-  const [clickedContact, setClickedContact] = useState();  
+  const [clickedName, setClickedName] = useState('');
+  const [clickedId, setClickedId] = useState(Math.random().toString());
 
   const addContactHandler = (id, enteredText) => {
-    console.log('adding new name!', enteredText);
     const newContact = {id: id, name: enteredText};
     setContactList((contactList) => [
       ...contactList, newContact 
@@ -36,12 +36,15 @@ export default function App() {
   }
 
   const cancelHandler = () => {
-    console.log('cancel Button Clicked!')
+    setClickedId(Math.random().toString());
+    setClickedName('');
+    setIsAdd(true);
     setIsContactDetailEnabled(false);
   }
 
   const addBtnClickHandler = () => {
-    console.log('addNewContactHandler clicked!')
+    setClickedId(Math.random().toString());
+    setClickedName('');
     setIsAdd(true);
     setIsContactDetailEnabled(true);
   }
@@ -62,10 +65,12 @@ export default function App() {
     })
   }
 
-  const contactClickHandler = (contact) => {
+  const contactClickHandler = (clickedId, clickedName) => {
+    setClickedId(clickedId);
+    setClickedName(clickedName);
     setIsAdd(false);
     setIsContactDetailEnabled(true);
-    setClickedContact(contact);
+    console.log('clickedID=', clickedId, " clickedName=", clickedName)
   }
 
   const updateNameHandler = (contactId, updatedName) => {
@@ -81,7 +86,6 @@ export default function App() {
     });
     setContactList(updatedContactList);
     setFilteredContactList(updatedContactList);
-
   }
 
   let allContacts;
@@ -95,7 +99,7 @@ export default function App() {
             id={contact.item.id}
             name={contact.item.name}
             onDelete={deleteHandler}
-            contactClickHandler={contactClickHandler}
+            contactClickHandler={()=> contactClickHandler(contact.item.id, contact.item.name)}
           />
         )}
       />
@@ -116,7 +120,8 @@ export default function App() {
         updateNameHandler={updateNameHandler}
         onCancel={cancelHandler}
         isAdd={isAdd}
-        contact={clickedContact}
+        name={clickedName}
+        id={clickedId}
       />
       {allContacts}
       <StatusBar style="auto" />

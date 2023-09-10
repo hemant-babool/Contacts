@@ -3,10 +3,8 @@ import { Modal, StyleSheet, TextInput, View, Button } from 'react-native';
 
 const ContactDetail = props => {
 
-    const [enteredName, setEnteredName] = useState(props.contact?.name);
+    const [enteredName, setEnteredName] = useState(props.name);
     const inputRef = useRef(null);
-
-    console.log('entered name=', enteredName)
 
     useEffect(() => {
       if (inputRef.current) {
@@ -14,14 +12,18 @@ const ContactDetail = props => {
       }
     });
 
+    useEffect(() => {
+      setEnteredName(props.name);
+    }, [props.name]);
+
     const actionButtonHandler = () => {
         if(enteredName.length === 0) {
             return;
         }
         if(props.isAdd) {
-            props.addContactHandler(Math.random().toString(), enteredName);
+            props.addContactHandler(props.id, enteredName);
         } else {
-            props.updateNameHandler(props.contact.id, enteredName);
+            props.updateNameHandler(props.id, enteredName);
         }
         setEnteredName('');
     }
