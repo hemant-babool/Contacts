@@ -17,14 +17,17 @@ const getInitContactList = () => {
 
 export default function App() {
 
-  const [isContactDetailEnabled, setIsContactDetailEnabled] = useState(false);
-  const [contactList, setContactList] = useState(getInitContactList());
-  const [filteredContactList, setFilteredContactList] = useState([...contactList]);
-  
+  const initialContacts = getInitContactList() || [];
 
-  const addContactHandler = (enteredText) => {
+  const [isContactDetailEnabled, setIsContactDetailEnabled] = useState(false);
+  const [contactList, setContactList] = useState(initialContacts);
+  const [filteredContactList, setFilteredContactList] = useState(initialContacts);
+  const [isAdd, setIsAdd] = useState(true);
+  const [clickedContact, setClickedContact] = useState();  
+
+  const addContactHandler = (id, enteredText) => {
     console.log('adding new name!', enteredText);
-    const newContact = {id: Math.random().toString(), name: enteredText};
+    const newContact = {id: id, name: enteredText};
     setContactList((contactList) => [
       ...contactList, newContact 
     ])
@@ -39,6 +42,7 @@ export default function App() {
 
   const addBtnClickHandler = () => {
     console.log('addNewContactHandler clicked!')
+    setIsAdd(true);
     setIsContactDetailEnabled(true);
   }
 
@@ -58,22 +62,62 @@ export default function App() {
     })
   }
 
+  const contactClickHandler = (contact) => {
+    setIsAdd(false);
+    setIsContactDetailEnabled(true);
+    setClickedContact(contact);
+  }
+
+  const updateNameHandler = (contactId, updatedName) => {
+    setIsContactDetailEnabled(false);
+    setIsAdd(true);
+    const newObj = {id: contactId, name: updatedName};
+    const updatedContactList = contactList.map((contact) => {
+      if(contact.id === contactId) { 
+        return newObj; 
+      } else {
+        return contact;
+      }
+    });
+    setContactList(updatedContactList);
+    setFilteredContactList(updatedContactList);
+
+  }
+
   let allContacts;
   if (!isContactDetailEnabled) {
     allContacts = (
       <FlatList
         data={filteredContactList}
-        keyExtractor = {(item, index) => item.id}
-        renderItem={(contact) => <Contact id={contact.item.id} name={contact.item.name} onDelete={deleteHandler}/>}
+        keyExtractor={(item, index) => item.id}
+        renderItem={(contact) => (
+          <Contact
+            id={contact.item.id}
+            name={contact.item.name}
+            onDelete={deleteHandler}
+            contactClickHandler={contactClickHandler}
+          />
+        )}
       />
     );
   }
 
   return (
     <View style={styles.container}>
-      <Header title="Contacts"/>
-      <SearchBox onAddClick={addBtnClickHandler} placeHolder="Search contact" searchHandler={search}/>
-      <ContactDetail visible={isContactDetailEnabled} addContactHandler={addContactHandler} onCancel={cancelHandler} />
+      <Header title="Contacts" />
+      <SearchBox
+        onAddClick={addBtnClickHandler}
+        placeHolder="Search contact"
+        searchHandler={search}
+      />
+      <ContactDetail
+        visible={isContactDetailEnabled}
+        addContactHandler={addContactHandler}
+        updateNameHandler={updateNameHandler}
+        onCancel={cancelHandler}
+        isAdd={isAdd}
+        contact={clickedContact}
+      />
       {allContacts}
       <StatusBar style="auto" />
     </View>

@@ -10,8 +10,14 @@ const Contact = props => {
         props.onDelete(props.id);
     }
 
+    const contactClickHandler = () => {
+        const clickedContact = { id: props.id, name: props.name};
+        console.log('clicked detected, passing value to parent=', clickedContact)
+        props.contactClickHandler(clickedContact);
+    }
+
     return (
-      <TouchableOpacity activeOpacity={0.6}>
+      <TouchableOpacity activeOpacity={0.6} onPress={contactClickHandler}>
         <View style={styles.container}>
           <Icon
             name="user"
