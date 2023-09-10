@@ -47,9 +47,6 @@ export default function App() {
       return contact.name.toLowerCase().includes(searchText.toLowerCase())
     });
     setFilteredContactList(filterArray);
-
-    console.log('contactList = ', contactList)
-    console.log('filteredList = ', filterArray)
   }
 
   let allContacts;
