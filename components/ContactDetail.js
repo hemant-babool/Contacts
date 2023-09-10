@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Modal, StyleSheet, TextInput, View, Button } from 'react-native';
 
 const ContactDetail = props => {
 
     const [enteredName, setEnteredName] = useState('');
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    });
 
     const addBtnHandler = () => {
         if(enteredName.length === 0) {
@@ -26,6 +33,7 @@ const ContactDetail = props => {
       <Modal visible={props.visible} animationType="slide">
         <View style={styles.inputContainer}>
           <TextInput
+            ref={inputRef}
             placeholder="Enter name"
             style={styles.input}
             onChangeText={nameChangeHandler}
