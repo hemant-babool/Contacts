@@ -19,6 +19,7 @@ export default function App() {
 
   const [isContactDetailEnabled, setIsContactDetailEnabled] = useState(false);
   const [contactList, setContactList] = useState(getInitContactList());
+  const [filteredContactList, setFilteredContactList] = useState([...contactList]);
   
 
   const addContactHandler = (enteredText) => {
@@ -27,6 +28,7 @@ export default function App() {
       ...contactList, {id: Math.random().toString(), name: enteredText}
     ])
     setIsContactDetailEnabled(false);
+    setFilteredContactList([...contactList]);
   }
 
   const cancelHandler = () => {
@@ -34,16 +36,26 @@ export default function App() {
     setIsContactDetailEnabled(false);
   }
 
-  const addNewContactHandler = () => {
+  const addBtnClickHandler = () => {
     console.log('addNewContactHandler clicked!')
     setIsContactDetailEnabled(true);
+  }
+
+  const search = (searchText) => {   
+    const filterArray = contactList.filter((contact) => {
+      return contact.name.toLowerCase().includes(searchText.toLowerCase())
+    });
+    setFilteredContactList(filterArray);
+
+    console.log('contactList = ', contactList)
+    console.log('filteredList = ', filterArray)
   }
 
   let allContacts;
   if (!isContactDetailEnabled) {
     allContacts = (
       <FlatList
-        data={contactList}
+        data={filteredContactList}
         keyExtractor = {(item, index) => item.id}
         renderItem={(contact) => <Contact id={contact.item.id} name={contact.item.name} />}
       />
@@ -53,7 +65,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Header title="Contacts"/>
-      <SearchBox onAddClick={addNewContactHandler} placeHolder="Search contact"/>
+      <SearchBox onAddClick={addBtnClickHandler} placeHolder="Search contact" searchHandler={search}/>
       <ContactDetail visible={isContactDetailEnabled} addContactHandler={addContactHandler} onCancel={cancelHandler} />
       {allContacts}
       <StatusBar style="auto" />

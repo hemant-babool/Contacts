@@ -17,6 +17,11 @@ const ContactDetail = props => {
         setEnteredName(enteredText);
     }
 
+    const cancelBtnHandler = () => {
+        setEnteredName('');
+        props.onCancel();
+    }
+
     return (
       <Modal visible={props.visible} animationType="slide">
         <View style={styles.inputContainer}>
@@ -28,7 +33,7 @@ const ContactDetail = props => {
           />
           <View style={styles.buttonContainer}>
             <View style={styles.button}>
-              <Button title="CANCEL" color="red" onPress={props.onCancel} />
+              <Button title="CANCEL" color="red" onPress={cancelBtnHandler} />
             </View>
             <View style={styles.button}>
               <Button title="ADD" onPress={addBtnHandler} />

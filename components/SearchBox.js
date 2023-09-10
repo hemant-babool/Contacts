@@ -5,20 +5,33 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const SearchBox = props => {
 
-    const addButtonHandler = () => {
-        console.log('add button clicked!');
+    const searchHandler = (searchText) => {
+        console.log('seaching... search text=', searchText);
+        props.searchHandler(searchText);
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.inputContainer}>
-                <Icon name="search" size={24} color={colors.iconColor} style={styles.icon} />
-                <TextInput style={styles.input} placeholder={props.placeHolder}/>
-            </View>
-            <TouchableOpacity style={styles.addButtonContainer} onPress={props.onAddClick}>
-                <Icon name='plus' size={30} color='black' style={styles.plusIcon}/>
-            </TouchableOpacity>
+      <View style={styles.container}>
+        <View style={styles.inputContainer}>
+          <Icon
+            name="search"
+            size={24}
+            color={colors.iconColor}
+            style={styles.icon}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder={props.placeHolder}
+            onChangeText={searchHandler}
+          />
         </View>
+        <TouchableOpacity
+          style={styles.addButtonContainer}
+          onPress={props.onAddClick}
+        >
+          <Icon name="plus" size={30} color="black" style={styles.plusIcon} />
+        </TouchableOpacity>
+      </View>
     );
 
 }
