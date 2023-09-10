@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import colors from '../constants/colors';
 
@@ -7,10 +7,13 @@ import colors from '../constants/colors';
 const Contact = props => {
 
     return (
-        <View style={styles.container}>
-            <Icon name="user" size={36} color={colors.iconColor} style={styles.icon}/>
-            <Text style={styles.name}> {props.name} </Text>
-        </View>
+        <TouchableOpacity activeOpacity={0.8}>
+            <View style={styles.container}>
+                <Icon name="user" size={36} color={colors.iconColor} style={styles.userIcon}/>
+                <Text style={styles.name}> {props.name} </Text>
+                <Icon name="trash" size={36} color={colors.iconColor} style={styles.trashIcon}/>
+            </View>
+        </TouchableOpacity>
     );
 
 };
@@ -30,11 +33,15 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.26,
         backgroundColor: colors.secondary
     },
-    icon: {
+    userIcon: {
         padding: 10
     },
+    trashIcon: {
+      padding: 10  
+    },
     name: {
-        fontSize: 18
+        fontSize: 18,
+        flex: 1
     }
 
 });

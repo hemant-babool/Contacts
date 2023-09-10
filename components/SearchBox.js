@@ -66,6 +66,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     input: {
+        fontSize: 14,
+        width: '90%',
         color: 'black',
     },
     addButtonContainer: {
