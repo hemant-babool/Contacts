@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
 
 import Header from './components/Header';
 import SearchBox from './components/SearchBox';
@@ -70,7 +70,6 @@ export default function App() {
     setClickedName(clickedName);
     setIsAdd(false);
     setIsContactDetailEnabled(true);
-    console.log('clickedID=', clickedId, " clickedName=", clickedName)
   }
 
   const updateNameHandler = (contactId, updatedName) => {
