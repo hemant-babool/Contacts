@@ -24,11 +24,12 @@ export default function App() {
 
   const addContactHandler = (enteredText) => {
     console.log('adding new name!', enteredText);
+    const newContact = {id: Math.random().toString(), name: enteredText};
     setContactList((contactList) => [
-      ...contactList, {id: Math.random().toString(), name: enteredText}
+      ...contactList, newContact 
     ])
     setIsContactDetailEnabled(false);
-    setFilteredContactList([...contactList]);
+    setFilteredContactList([...contactList, newContact]);
   }
 
   const cancelHandler = () => {

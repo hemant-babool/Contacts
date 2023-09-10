@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useState }  from 'react';
 import { StyleSheet, TextInput, View, Text, TouchableOpacity } from 'react-native';
 import colors from '../constants/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const SearchBox = props => {
 
+    const [searchText, setSearchText] = useState('');
+
     const searchHandler = (searchText) => {
-        console.log('seaching... search text=', searchText);
+        setSearchText(searchText);
         props.searchHandler(searchText);
+    }
+
+    const addBtnHandler = () => {
+        setSearchText('');
+        props.onAddClick();
     }
 
     return (
@@ -23,11 +30,12 @@ const SearchBox = props => {
             style={styles.input}
             placeholder={props.placeHolder}
             onChangeText={searchHandler}
+            value={searchText}
           />
         </View>
         <TouchableOpacity
           style={styles.addButtonContainer}
-          onPress={props.onAddClick}
+          onPress={addBtnHandler}
         >
           <Icon name="plus" size={30} color="black" style={styles.plusIcon} />
         </TouchableOpacity>
