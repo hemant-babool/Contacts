@@ -1,39 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Alert, FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 
 import Header from './components/Header';
 import SearchBox from './components/SearchBox';
 import Contact from './components/Contact';
 import ContactDetail from './components/ContactDetail';
-
-const getInitContactList = () => {
-  return [
-    {id: Math.random().toString(), name: 'Shubhman Gill'},
-    {id: Math.random().toString(), name: 'Rohit Sharma'},
-    {id: Math.random().toString(), name: 'Virat Kohli'}
-  ];
-}
+import { getAllContacts, addNewContact, deleteContact, updateContact } from './services/Storage';
 
 export default function App() {
 
-  const initialContacts = getInitContactList() || [];
-
   const [isContactDetailEnabled, setIsContactDetailEnabled] = useState(false);
-  const [contactList, setContactList] = useState(initialContacts);
-  const [filteredContactList, setFilteredContactList] = useState(initialContacts);
+  const [contactList, setContactList] = useState([]);
+  const [filteredContactList, setFilteredContactList] = useState([]);
   const [isAdd, setIsAdd] = useState(true);
   const [clickedName, setClickedName] = useState('');
   const [clickedId, setClickedId] = useState(Math.random().toString());
 
+  useEffect(() => {
+    getAllContacts().then((contactList) => {
+      setContactList(contactList);
+      setFilteredContactList(contactList);
+    })
+  }, [])
+
   const addContactHandler = (id, enteredText) => {
-    const newContact = {id: id, name: enteredText};
-    setContactList((contactList) => [
-      ...contactList, newContact 
-    ])
-    setIsContactDetailEnabled(false);
-    setFilteredContactList([...contactList, newContact]);
-  }
+    const newContact = { id: id, name: enteredText };
+    addNewContact(newContact)
+      .then(() => {
+        getAllContacts().then((contacts) => {
+          setContactList(contacts);
+          setFilteredContactList(contacts);
+          setIsContactDetailEnabled(false);
+        });
+      })
+      .catch((error) =>
+        console.log("some error in adding new contact!", error)
+      );
+  };
 
   const cancelHandler = () => {
     setClickedId(Math.random().toString());
@@ -57,13 +61,18 @@ export default function App() {
   }
 
   const deleteHandler = (contactId) => {
-    setContactList((contactList) => {
-      return contactList.filter((contact) => contact.id !== contactId);
-    });
-    setFilteredContactList((filteredContactList) => {
-      return filteredContactList.filter((contact) => contact.id !== contactId);
-    })
-  }
+    deleteContact(contactId)
+      .then(() => {
+        getAllContacts().then((contacts) => {
+          setContactList(contacts);
+          setFilteredContactList(contacts);
+          setIsContactDetailEnabled(false);
+        });
+      })
+      .catch((error) =>
+        console.error("some error in deleting contactId=", contactId, error)
+      );
+  };
 
   const contactClickHandler = (clickedId, clickedName) => {
     setClickedId(clickedId);
@@ -73,18 +82,15 @@ export default function App() {
   }
 
   const updateNameHandler = (contactId, updatedName) => {
-    setIsContactDetailEnabled(false);
-    setIsAdd(true);
     const newObj = {id: contactId, name: updatedName};
-    const updatedContactList = contactList.map((contact) => {
-      if(contact.id === contactId) { 
-        return newObj; 
-      } else {
-        return contact;
-      }
-    });
-    setContactList(updatedContactList);
-    setFilteredContactList(updatedContactList);
+    updateContact(contactId, newObj).then(() => {
+      getAllContacts().then((contacts) => {
+        setContactList(contacts);
+        setFilteredContactList(contacts);
+        setIsContactDetailEnabled(false);
+        setIsAdd(true);
+      });
+    })
   }
 
   let allContacts;
