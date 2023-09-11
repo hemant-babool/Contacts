@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { FlatList, StyleSheet, View } from 'react-native';
 
 import Header from './components/Header';
 import SearchBox from './components/SearchBox';
 import Contact from './components/Contact';
 import ContactDetail from './components/ContactDetail';
-import { getAllContacts, addNewContact, deleteContact, updateContact } from './services/Storage';
+import { getAllContacts, addNewContact, deleteContact, updateContact, getMaxId } from './services/Storage';
 
 export default function App() {
 
@@ -15,12 +14,17 @@ export default function App() {
   const [filteredContactList, setFilteredContactList] = useState([]);
   const [isAdd, setIsAdd] = useState(true);
   const [clickedName, setClickedName] = useState('');
-  const [clickedId, setClickedId] = useState(Math.random().toString());
+  const [clickedId, setClickedId] = useState(1);
 
   useEffect(() => {
     getAllContacts().then((contactList) => {
       setContactList(contactList);
       setFilteredContactList(contactList);
+    })
+  }, [])
+  useEffect(() => {
+    getMaxId().then((maxId) => {
+      setClickedId(maxId + 1);
     })
   }, [])
 
@@ -40,14 +44,18 @@ export default function App() {
   };
 
   const cancelHandler = () => {
-    setClickedId(Math.random().toString());
+    getMaxId().then((maxId) => {
+      setClickedId(maxId + 1);
+    })
     setClickedName('');
     setIsAdd(true);
     setIsContactDetailEnabled(false);
   }
 
   const addBtnClickHandler = () => {
-    setClickedId(Math.random().toString());
+    getMaxId().then((maxId) => {
+      setClickedId(maxId + 1);
+    })
     setClickedName('');
     setIsAdd(true);
     setIsContactDetailEnabled(true);
@@ -98,7 +106,7 @@ export default function App() {
     allContacts = (
       <FlatList
         data={filteredContactList}
-        keyExtractor={(item, index) => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={(contact) => (
           <Contact
             id={contact.item.id}
@@ -129,7 +137,6 @@ export default function App() {
         id={clickedId}
       />
       {allContacts}
-      <StatusBar style="auto" />
     </View>
   );
 }

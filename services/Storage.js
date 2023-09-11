@@ -45,3 +45,12 @@ export const updateContact = async (contactId, updatedContact) => {
     console.error("error in updating contact updateContactObj=",JSON.stringify(updatedContact));
   }
 };
+
+export const getMaxId = async() => {
+    const allContacts = await getAllContacts();
+    if(allContacts.length === 0) {
+        return 0;
+    }
+    const maxId = Math.max(...allContacts.map((contact) => contact.id));
+    return maxId;
+}
